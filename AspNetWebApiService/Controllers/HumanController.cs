@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNetWebApiService.Models;
+using Mapster;
 
 namespace AspNetWebApiService.Controllers
 {
@@ -19,6 +20,7 @@ namespace AspNetWebApiService.Controllers
         {
             new HumanModel()
             {
+                Id = 0,
                 Surname = "Иванов",
                 Name = "Иван",
                 Patronymic = "Иванович",
@@ -26,6 +28,7 @@ namespace AspNetWebApiService.Controllers
             },
             new HumanModel()
             {
+                Id = 1,
                 Surname = "Сергеев",
                 Name = "Сергей",
                 Patronymic = "Сергеевич",
@@ -33,6 +36,7 @@ namespace AspNetWebApiService.Controllers
             },
             new HumanModel()
             {
+                Id = 2,
                 Surname = "Петров",
                 Name = "Петр",
                 Patronymic = "Петрович",
@@ -45,9 +49,20 @@ namespace AspNetWebApiService.Controllers
         /// </summary>
         /// <returns>Список людей</returns>
         [HttpGet]
-        public IEnumerable<HumanModel> Get()
+        public IEnumerable<HumanModelDTO> Get()
         {
-            return _humans;
+            return _humans.Adapt<IEnumerable<HumanModelDTO>>();
+        }
+
+        /// <summary>
+        /// Получить человека по номеру
+        /// </summary>
+        /// <param name="id">Номер человека</param>
+        /// <returns>Человек по немору</returns>
+        [HttpGet("{id}")]
+        public HumanModelDTO Get(int id)
+        {
+            return _humans.ElementAt(id).Adapt<HumanModelDTO>();
         }
 
         /// <summary>
@@ -56,9 +71,9 @@ namespace AspNetWebApiService.Controllers
         /// <param name="name">Имя</param>
         /// <returns>Список людей по имени</returns>
         [HttpGet("{name}")]
-        public IEnumerable<HumanModel> Get(string name)
+        public IEnumerable<HumanModelDTO> Get(string name)
         {
-            return _humans.Where(c => c.Name == name);
+            return _humans.Where(c => c.Name == name).ToList().Adapt<IEnumerable<HumanModelDTO>>();
         }
 
         /// <summary>
@@ -67,10 +82,10 @@ namespace AspNetWebApiService.Controllers
         /// <param name="humanModel">Человек</param>
         /// <returns>Список всех людей</returns>
         [HttpPost]
-        public IEnumerable<HumanModel> Post([FromBody] HumanModel humanModel)
+        public IEnumerable<HumanModelDTO> Post([FromBody] HumanModel humanModel)
         {
             _humans.Add(humanModel);
-            return _humans;
+            return _humans.Adapt<IEnumerable<HumanModelDTO>>();
         }
 
         /// <summary>

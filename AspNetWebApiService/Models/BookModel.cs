@@ -11,6 +11,10 @@ namespace AspNetWebApiService.Models
     public class BookModel
     {
         /// <summary>
+        /// Номер книги
+        /// </summary>
+        public int Id { get; set; }
+        /// <summary>
         /// Название книги
         /// </summary>
         public string Title { get; set; }

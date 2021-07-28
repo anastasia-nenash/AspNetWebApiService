@@ -11,6 +11,10 @@ namespace AspNetWebApiService.Models
     public class HumanModel
     {
         /// <summary>
+        /// Номер человека
+        /// </summary>
+        public int Id { get; set; }
+        /// <summary>
         /// Фамилия
         /// </summary>
         public string Surname { get; set; }

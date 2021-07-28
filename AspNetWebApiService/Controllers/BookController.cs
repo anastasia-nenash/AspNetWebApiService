@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNetWebApiService.Models;
+using Mapster;
 
 
 namespace AspNetWebApiService.Controllers
@@ -20,18 +21,21 @@ namespace AspNetWebApiService.Controllers
         {
             new BookModel()
             {
+                Id = 0,
                 Title = "Убийство в Восточном экспрессе",
                 AuthorName = "Агата Кристи",
                 Genre = "Детектив"
             },
             new BookModel()
             {
+                Id = 1,
                 Title = "Над пропастью во ржи",
                 AuthorName = "Джером Сэлинджер",
                 Genre = "Роман"
             },
             new BookModel()
             {
+                Id = 2,
                 Title = "Мы",
                 AuthorName = "Е.И. Замятин",
                 Genre = "Антиутопия"
@@ -43,9 +47,20 @@ namespace AspNetWebApiService.Controllers
         /// </summary>
         /// <returns>Список всех книг</returns>
         [HttpGet]
-        public IEnumerable<BookModel> Get()
+        public IEnumerable<BookModelDTO> Get()
         {
-            return _books;
+            return _books.Adapt<IEnumerable<BookModelDTO>>();
+        }
+
+        /// <summary>
+        /// Получить книгу по номеру
+        /// </summary>
+        /// <param name="id">Номер книги</param>
+        /// <returns>Книга по номеру</returns>
+        [HttpGet("{id}")]
+        public BookModelDTO Get(int id)
+        {
+            return _books.ElementAt(id).Adapt<BookModelDTO>();
         }
 
         /// <summary>
@@ -54,9 +69,11 @@ namespace AspNetWebApiService.Controllers
         /// <param name="authorName">Автор книги</param>
         /// <returns>Список книг по автору</returns>
         [HttpGet("{authorName}")]
-        public IEnumerable<BookModel> Get(string authorName)
+        public IEnumerable<BookModelDTO> Get(string authorName)
         {
-            return _books.Where(c => c.AuthorName == authorName);
+            IEnumerable<BookModel> _booksDTOs = _books.Where(c => c.AuthorName == authorName)
+                                                      .ToList();
+            return _booksDTOs.Adapt<IEnumerable<BookModelDTO>>();
         }
 
         /// <summary>
@@ -65,10 +82,10 @@ namespace AspNetWebApiService.Controllers
         /// <param name="bookModel">Книга</param>
         /// <returns>Список всех книг</returns>
         [HttpPost]
-        public IEnumerable<BookModel> Post([FromBody] BookModel bookModel)
+        public IEnumerable<BookModelDTO> Post([FromBody] BookModel bookModel)
         {
             _books.Add(bookModel);
-            return _books;
+            return _books.Adapt<IEnumerable<BookModelDTO>>();
         }
 
         /// <summary>
