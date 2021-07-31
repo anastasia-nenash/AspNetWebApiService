@@ -12,6 +12,9 @@ namespace AspNetWebApiService.Controllers
     [ApiController]
     public class HumanTakeBookController : ControllerBase
     {
+        /// <summary>
+        /// Лист с записями о получении книг
+        /// </summary>
         private static List<HumanTakeBookModel> _humanTakeBookModel = new List<HumanTakeBookModel>();
 
         /// <summary>

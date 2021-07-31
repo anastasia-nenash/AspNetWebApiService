@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AspNetWebApiService.Models;
 using Mapster;
-
+using System.Text.Json;
 
 namespace AspNetWebApiService.Controllers
 {
@@ -57,7 +57,7 @@ namespace AspNetWebApiService.Controllers
         /// </summary>
         /// <param name="id">Номер книги</param>
         /// <returns>Книга по номеру</returns>
-        [HttpGet("{id}")]
+        [HttpGet("{id}/book")]
         public BookModelDTO Get(int id)
         {
             return _books.ElementAt(id).Adapt<BookModelDTO>();
@@ -84,6 +84,7 @@ namespace AspNetWebApiService.Controllers
         [HttpPost]
         public IEnumerable<BookModelDTO> Post([FromBody] BookModel bookModel)
         {
+            
             _books.Add(bookModel);
             return _books.Adapt<IEnumerable<BookModelDTO>>();
         }

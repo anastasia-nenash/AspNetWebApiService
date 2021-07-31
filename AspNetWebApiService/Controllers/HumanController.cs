@@ -59,7 +59,7 @@ namespace AspNetWebApiService.Controllers
         /// </summary>
         /// <param name="id">Номер человека</param>
         /// <returns>Человек по немору</returns>
-        [HttpGet("{id}")]
+        [HttpGet("{id}/human")]
         public HumanModelDTO Get(int id)
         {
             return _humans.ElementAt(id).Adapt<HumanModelDTO>();
