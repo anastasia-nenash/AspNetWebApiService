@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AspNetWebApiService.Models;
 using Mapster;
+using Newtonsoft.Json;
 
 namespace AspNetWebApiService.Controllers
 {
@@ -49,9 +50,14 @@ namespace AspNetWebApiService.Controllers
         /// </summary>
         /// <returns>Список людей</returns>
         [HttpGet]
-        public IEnumerable<HumanModelDTO> Get()
+        public string Get()
         {
-            return _humans.Adapt<IEnumerable<HumanModelDTO>>();
+            return JsonConvert.SerializeObject(_humans.Adapt<IEnumerable<HumanModelDTO>>(),
+                new JsonSerializerSettings
+                {
+                    ContractResolver = new IgnoreJsonAttributesResolver(),
+                    Formatting = Formatting.Indented
+                });
         }
 
         /// <summary>
@@ -82,10 +88,14 @@ namespace AspNetWebApiService.Controllers
         /// <param name="humanModel">Человек</param>
         /// <returns>Список всех людей</returns>
         [HttpPost]
-        public IEnumerable<HumanModelDTO> Post([FromBody] HumanModel humanModel)
+        public ActionResult Post([FromBody] HumanModel humanModel)
         {
+            if (_humans.FirstOrDefault(x => x.Id == humanModel.Id) != null)
+            {
+                return BadRequest("Человек с таким номером уже существует");
+            }
             _humans.Add(humanModel);
-            return _humans.Adapt<IEnumerable<HumanModelDTO>>();
+            return Ok(_humans.Adapt<IEnumerable<HumanModelDTO>>());
         }
 
         /// <summary>

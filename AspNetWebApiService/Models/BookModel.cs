@@ -22,7 +22,7 @@ namespace AspNetWebApiService.Models
         /// Название книги
         /// </summary>
         [Required(ErrorMessage = "Обязательное поле")]
-        [DisplayName("Название книги")]
+        [DisplayName("Название книги")]        
         public string Title { get; set; }
 
         /// <summary>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace AspNetWebApiService.Models
@@ -14,7 +15,8 @@ namespace AspNetWebApiService.Models
         [DisplayName("Автор книги")]        
         public string AuthorName { get; set; }
 
-        [DisplayName("Жанр книги")]       
+        [DisplayName("Жанр книги")]
+        [JsonIgnore]
         public string Genre { get; set; }
     }
 }

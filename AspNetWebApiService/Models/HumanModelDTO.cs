@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using System.Text.Json.Serialization;
 
 namespace AspNetWebApiService.Models
 {
@@ -18,6 +19,7 @@ namespace AspNetWebApiService.Models
         public string Patronymic { get; set; }
 
         [DisplayName("Дата рождения")]
+        [JsonIgnore]
         public DateTime DateOfBirth { get; set; }
     }
 }

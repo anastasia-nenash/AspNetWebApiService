@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AspNetWebApiService.Models;
 using Mapster;
 using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace AspNetWebApiService.Controllers
 {
@@ -47,9 +48,14 @@ namespace AspNetWebApiService.Controllers
         /// </summary>
         /// <returns>Список всех книг</returns>
         [HttpGet]
-        public IEnumerable<BookModelDTO> Get()
+        public string Get()
         {
-            return _books.Adapt<IEnumerable<BookModelDTO>>();
+            return JsonConvert.SerializeObject(_books.Adapt<IEnumerable<BookModelDTO>>(),
+                new JsonSerializerSettings
+                {
+                    ContractResolver = new IgnoreJsonAttributesResolver(),
+                    Formatting = Formatting.Indented
+                });
         }
 
         /// <summary>
@@ -82,11 +88,14 @@ namespace AspNetWebApiService.Controllers
         /// <param name="bookModel">Книга</param>
         /// <returns>Список всех книг</returns>
         [HttpPost]
-        public IEnumerable<BookModelDTO> Post([FromBody] BookModel bookModel)
+        public IActionResult Post([FromBody] BookModel bookModel)
         {
-            
-            _books.Add(bookModel);
-            return _books.Adapt<IEnumerable<BookModelDTO>>();
+            if(_books.FirstOrDefault(x => x.Id == bookModel.Id) != null)
+            {
+                return BadRequest("Книга с таким номером уже существует");
+            }            
+            _books.Add(bookModel);            
+            return Ok(_books.Adapt<IEnumerable<BookModelDTO>>());
         }
 
         /// <summary>
