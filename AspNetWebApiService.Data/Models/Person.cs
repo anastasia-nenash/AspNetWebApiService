@@ -1,46 +1,51 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Text.Json.Serialization;
 
-namespace AspNetWebApiService.Models
+namespace AspNetWebApiService.Data.Models
 {
     /// <summary>
-    /// Человек
+    /// Человек, взявший книгу
     /// </summary>
-    public class HumanModel
+    public class Person : Logging
     {
         /// <summary>
         /// Номер человека
         /// </summary>
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public Guid Id { get; set; }
+
         /// <summary>
         /// Фамилия
         /// </summary>
         [Required(ErrorMessage = "Обязательное поле")]
         [DisplayName("Фамилия")]
-        public string Surname { get; set; }
+        public string LastName { get; set; }
+
         /// <summary>
         /// Имя
         /// </summary>
         [Required(ErrorMessage = "Обязательное поле")]
         [DisplayName("Имя")]
-        public string Name { get; set; }
+        public string FirstName { get; set; }
+
         /// <summary>
         /// Отчество
         /// </summary>
-        [Required(ErrorMessage = "Обязательное поле")]
         [DisplayName("Отчество")]
-        public string Patronymic { get; set; }
+        public string MiddleName { get; set; }
+
         /// <summary>
         /// Дата рождения
         /// </summary>
-        [Required(ErrorMessage = "Обязательное поле")]
         [DisplayName("Дата рождения")]
         public DateTime DateOfBirth { get; set; }
+
+        /// <summary>
+        /// Наличие книг у пользователей
+        /// </summary>
+        public List<LibraryCard> LibraryCards { get; set; } = new List<LibraryCard>();
     }
 }
