@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using AspNetWebApiService.Models;
-using Mapster;
-using System.Text.Json;
-using Newtonsoft.Json;
+using AspNetWebApiService.Data;
+using AspNetWebApiService.Data.Interfaces;
+using AspNetWebApiService.Data.Repositories;
+using Microsoft.EntityFrameworkCore;
+using AspNetWebApiService.Data.Models;
 
 namespace AspNetWebApiService.Controllers
 {
@@ -15,98 +15,108 @@ namespace AspNetWebApiService.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        /// <summary>
-        /// Список книг
-        /// </summary>
-        private static List<BookModel> _books = new List<BookModel>()
+        private DataContext dataContext;
+        public IBookRepository bookRepository;
+        public BookController(DataContext dataContext = null)
         {
-            new BookModel()
+            this.dataContext = dataContext;
+            bookRepository = new BookRepository(dataContext);
+        }
+
+        /// <summary>
+        /// Получить книги по автору
+        /// </summary>
+        /// <param name="lastName">Фамилия автора</param>
+        /// <param name="firstName">Имя автора</param>
+        /// <param name="middleName">Отчество автора</param>
+        /// <returns>Книги автора с жанром</returns>
+        [HttpGet("GetBooksByAuthor")]
+        public IEnumerable<BookModelDTO> GetBooksByAuthor(string lastName, string firstName, string middleName)
+        {
+
+            var books = bookRepository.GetBooksByAuthor(lastName, firstName, middleName);
+            List<BookModelDTO> _bookModelDTO = new List<BookModelDTO>();
+            foreach (var book in books)
             {
-                Id = 0,
-                Title = "Убийство в Восточном экспрессе",
-                AuthorName = "Агата Кристи",
-                Genre = "Детектив"
-            },
-            new BookModel()
-            {
-                Id = 1,
-                Title = "Над пропастью во ржи",
-                AuthorName = "Джером Сэлинджер",
-                Genre = "Роман"
-            },
-            new BookModel()
-            {
-                Id = 2,
-                Title = "Мы",
-                AuthorName = "Е.И. Замятин",
-                Genre = "Антиутопия"
+                _bookModelDTO.Add(new BookModelDTO(book.Name, book.Author.FirstName,
+                                                   book.Author.MiddleName, book.Author.LastName,
+                                                   book.Genres.Select(x => x.GenreName).ToList()));
             }
-        };
-
-        /// <summary>
-        /// Получить список всех книг
-        /// </summary>
-        /// <returns>Список всех книг</returns>
-        [HttpGet]
-        public string Get()
-        {
-            return JsonConvert.SerializeObject(_books.Adapt<IEnumerable<BookModelDTO>>(),
-                new JsonSerializerSettings
-                {
-                    ContractResolver = new IgnoreJsonAttributesResolver(),
-                    Formatting = Formatting.Indented
-                });
+            return _bookModelDTO;
         }
 
         /// <summary>
-        /// Получить книгу по номеру
+        /// Получить книги по жанру
         /// </summary>
-        /// <param name="id">Номер книги</param>
-        /// <returns>Книга по номеру</returns>
-        [HttpGet("{id}/book")]
-        public BookModelDTO Get(int id)
+        /// <param name="genreName">Название жанра</param>
+        /// <returns>Список книг с авторами</returns>
+        [HttpGet("GetBooksByGenre")]
+        public IEnumerable<BookModelDTO> GetBooksByGenre(string genreName)
         {
-            return _books.ElementAt(id).Adapt<BookModelDTO>();
-        }
-
-        /// <summary>
-        /// Получить список книг по автору
-        /// </summary>
-        /// <param name="authorName">Автор книги</param>
-        /// <returns>Список книг по автору</returns>
-        [HttpGet("{authorName}")]
-        public IEnumerable<BookModelDTO> Get(string authorName)
-        {
-            IEnumerable<BookModel> _booksDTOs = _books.Where(c => c.AuthorName == authorName)
-                                                      .ToList();
-            return _booksDTOs.Adapt<IEnumerable<BookModelDTO>>();
-        }
-
-        /// <summary>
-        /// Добавить новую книгу
-        /// </summary>
-        /// <param name="bookModel">Книга</param>
-        /// <returns>Список всех книг</returns>
-        [HttpPost]
-        public IActionResult Post([FromBody] BookModel bookModel)
-        {
-            if(_books.FirstOrDefault(x => x.Id == bookModel.Id) != null)
+            var books = bookRepository.GetBooksByGenre(genreName);
+            List<BookModelDTO> _bookModelDTO = new List<BookModelDTO>();
+            foreach (var book in books)
             {
-                return BadRequest("Книга с таким номером уже существует");
-            }            
-            _books.Add(bookModel);            
-            return Ok(_books.Adapt<IEnumerable<BookModelDTO>>());
+                _bookModelDTO.Add(new BookModelDTO(book.Name, book.Author.FirstName,
+                                                   book.Author.MiddleName, book.Author.LastName,
+                                                   book.Genres.Select(x => x.GenreName).ToList()));
+            }
+            return _bookModelDTO;
         }
 
         /// <summary>
-        /// Удалить книгу по автору и названию
+        /// Добавить книгу
         /// </summary>
-        /// <param name="authorName">Автор</param>
-        /// <param name="title">Название книги</param>
-        [HttpDelete("{authorName}")]
-        public void Delete(string authorName, string title)
+        /// <param name="bookName">Название книги</param>
+        /// <param name="genreName">Название жанра</param>
+        /// <param name="authorName">Имя автора</param>
+        /// <param name="authorMidName">Отчество автора</param>
+        /// <param name="authorLastName">Фамилия автора</param>
+        /// <returns>Ок или ошибка, что такая книа есть</returns>
+        [HttpPost]
+        public IActionResult AddBook(string bookName, string genreName, string authorName, string authorMidName, string authorLastName)
         {
-            _books.RemoveAll(a => a.AuthorName == authorName && a.Title == title);
+            if (dataContext.Books.Where(x => x.Name == bookName).FirstOrDefault() != null)
+            {
+                return BadRequest("Такая книга уже существует");
+            }
+            bookRepository.AddBook(bookName, genreName, authorName, authorMidName, authorLastName);
+            return Ok();
         }
+
+        /// <summary>
+        /// Удалить книгу по номеру
+        /// </summary>
+        /// <param name="bookId">Номер книги</param>
+        /// <returns>Ок или ошибка, что книга у пользователя</returns>
+        [HttpDelete]
+        public IActionResult DeleteBook(Guid bookId)
+        {
+            if (dataContext.LibraryCards.FirstOrDefault(x => x.BookId == bookId) == null)
+            {
+                bookRepository.DeleteBook(bookId);
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Нельзя удалить, т.к. книга у пользователя");
+            }
+        }
+
+        /// <summary>
+        /// Добавить или удалить жанр
+        /// </summary>
+        /// <param name="bookName">Название книги</param>
+        /// <param name="genreName">Название жанра</param>
+        /// <returns>Книгу с добавленным или удаленным жанром</returns>
+        [HttpPost("AddOrDeleteGenre")]
+        public BookModelDTO AddOrDeleteGenre(string bookName, string genreName)
+        {
+            Book book = bookRepository.AddOrDeleteGenre(bookName, genreName);
+            return new BookModelDTO(book.Name, book.Author.FirstName, book.Author.MiddleName,
+                                    book.Author.LastName, book.Genres.Select(x => x.GenreName).ToList());
+        }
+
+
     }
 }

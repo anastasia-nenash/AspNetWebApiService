@@ -1,16 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
+using AspNetWebApiService.Data;
 
 namespace AspNetWebApiService
 {
@@ -31,6 +27,11 @@ namespace AspNetWebApiService
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApplication", Version = "v1" });
             });
+
+            var config = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
+            config.Providers.First().TryGet("DBConnectionString", out string DBConnectionString);
+            services.AddDbContext<DataContext>(options => options.UseSqlServer(DBConnectionString));
+            services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
