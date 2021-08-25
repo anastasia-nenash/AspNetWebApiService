@@ -1,7 +1,7 @@
-﻿using AspNetWebApiService.Data;
+﻿using AspNetWebApiService.Core.Interfaces;
+using AspNetWebApiService.Core.Repositories;
+using AspNetWebApiService.Data.Entities;
 using AspNetWebApiService.Data.Interfaces;
-using AspNetWebApiService.Data.Models;
-using AspNetWebApiService.Data.Repositories;
 using AspNetWebApiService.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -13,9 +13,9 @@ namespace AspNetWebApiService.Controllers
     [ApiController]
     public class GenreController : ControllerBase
     {
-        private DataContext dataContext;
-        public IGenreRepository genreRepository;
-        public GenreController(DataContext dataContext = null)
+        private  readonly IDataContext dataContext;
+        private readonly IGenreRepository genreRepository;
+        public GenreController(IDataContext dataContext)
         {
             this.dataContext = dataContext;
             genreRepository = new GenreRepository(dataContext);

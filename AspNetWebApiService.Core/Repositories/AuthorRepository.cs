@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AspNetWebApiService.Core.Interfaces;
+using AspNetWebApiService.Data.Entities;
 using AspNetWebApiService.Data.Interfaces;
-using AspNetWebApiService.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace AspNetWebApiService.Data.Repositories
+namespace AspNetWebApiService.Core.Repositories
 {
     public class AuthorRepository : IAuthorRepository
     {
-        private DataContext dataContext;
+        private IDataContext dataContext;
 
-        public AuthorRepository(DataContext dataContext = null)
+        public AuthorRepository(IDataContext dataContext)
         {
+           
             this.dataContext = dataContext;
         }
 
@@ -41,7 +43,7 @@ namespace AspNetWebApiService.Data.Repositories
                 MiddleName = middleName,
                 LastName = lastName
             };
-            dataContext.Add(author);
+            dataContext.Authors.Add(author);
             if (book == null && bookName != null)
             {
                 book = new Book()
@@ -50,9 +52,9 @@ namespace AspNetWebApiService.Data.Repositories
                     Name = bookName
                 };
                 book.AuthorId = author.Id;
-                dataContext.Add(book);
+                dataContext.Books.Add(book);               
             }
-            dataContext.SaveChanges();
+            dataContext.SaveChanges();            
         }
 
         public void DeleteAuthor(Guid authorId)

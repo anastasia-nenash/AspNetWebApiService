@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AspNetWebApiService.Data.Models
+namespace AspNetWebApiService.Data.Entities
 {
     /// <summary>
     /// Карточки библиотеки

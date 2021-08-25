@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetWebApiService", "AspNetWebApiService\AspNetWebApiService.csproj", "{4175E781-000E-4245-9DE7-B7750784109E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetWebApiService.Web", "AspNetWebApiService\AspNetWebApiService.Web.csproj", "{4175E781-000E-4245-9DE7-B7750784109E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetWebApiService.Data", "AspNetWebApiService.Data\AspNetWebApiService.Data.csproj", "{A78C08F3-9D20-43F9-A4E1-BEF78D03D588}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetWebApiService.Data", "AspNetWebApiService.Data\AspNetWebApiService.Data.csproj", "{A78C08F3-9D20-43F9-A4E1-BEF78D03D588}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetWebApiService.Core", "AspNetWebApiService.Core\AspNetWebApiService.Core.csproj", "{577067CA-1412-4FB6-9DF4-21AA21841B05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{A78C08F3-9D20-43F9-A4E1-BEF78D03D588}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A78C08F3-9D20-43F9-A4E1-BEF78D03D588}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A78C08F3-9D20-43F9-A4E1-BEF78D03D588}.Release|Any CPU.Build.0 = Release|Any CPU
+		{577067CA-1412-4FB6-9DF4-21AA21841B05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{577067CA-1412-4FB6-9DF4-21AA21841B05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{577067CA-1412-4FB6-9DF4-21AA21841B05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{577067CA-1412-4FB6-9DF4-21AA21841B05}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

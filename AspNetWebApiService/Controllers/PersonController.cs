@@ -1,7 +1,7 @@
-﻿using AspNetWebApiService.Data;
+﻿using AspNetWebApiService.Core.Interfaces;
+using AspNetWebApiService.Core.Repositories;
+using AspNetWebApiService.Data.Entities;
 using AspNetWebApiService.Data.Interfaces;
-using AspNetWebApiService.Data.Models;
-using AspNetWebApiService.Data.Repositories;
 using AspNetWebApiService.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,9 +14,9 @@ namespace AspNetWebApiService.Controllers
     [ApiController]
     public class PersonController : ControllerBase
     {
-        private DataContext dataContext;
-        private IPersonRepository personRepository;
-        public PersonController(DataContext dataContext)
+        private readonly IDataContext dataContext;
+        private readonly IPersonRepository personRepository;
+        public PersonController(IDataContext dataContext)
         {
             this.dataContext = dataContext;
             personRepository = new PersonRepository(dataContext);

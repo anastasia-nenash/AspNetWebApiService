@@ -7,6 +7,9 @@ using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using AspNetWebApiService.Data;
+using AspNetWebApiService.Data.Interfaces;
+using AspNetWebApiService.Core.Interfaces;
+using AspNetWebApiService.Core.Repositories;
 
 namespace AspNetWebApiService
 {
@@ -28,9 +31,15 @@ namespace AspNetWebApiService
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApplication", Version = "v1" });
             });
 
+            services.AddScoped<IAuthorRepository, AuthorRepository>();
+            services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped<IGenreRepository, GenreRepository>();
+            services.AddScoped<ILibraryCardRepository, LibraryCardRepository>();
+            services.AddScoped<IPersonRepository, PersonRepository>();
+
             var config = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
             config.Providers.First().TryGet("DBConnectionString", out string DBConnectionString);
-            services.AddDbContext<DataContext>(options => options.UseSqlServer(DBConnectionString));
+            services.AddDbContext<IDataContext, DataContext>(options => options.UseSqlServer(DBConnectionString));
             services.AddControllersWithViews();
         }
 

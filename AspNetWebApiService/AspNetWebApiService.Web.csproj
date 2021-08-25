@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AspNetWebApiService.Core\AspNetWebApiService.Core.csproj" />
     <ProjectReference Include="..\AspNetWebApiService.Data\AspNetWebApiService.Data.csproj" />
   </ItemGroup>
 

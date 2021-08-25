@@ -1,10 +1,9 @@
-﻿using AspNetWebApiService.Data;
+﻿using AspNetWebApiService.Core.Interfaces;
+using AspNetWebApiService.Core.Repositories;
+using AspNetWebApiService.Data.Entities;
 using AspNetWebApiService.Data.Interfaces;
-using AspNetWebApiService.Data.Models;
-using AspNetWebApiService.Data.Repositories;
 using AspNetWebApiService.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +14,9 @@ namespace AspNetWebApiService.Controllers
     [ApiController]
     public class AuthorController : ControllerBase
     {
-        private DataContext dataContext;
-        public IAuthorRepository authorRepository;
-        public AuthorController(DataContext dataContext = null)
+        private readonly IDataContext dataContext;
+        private readonly IAuthorRepository authorRepository;
+        public AuthorController(IDataContext dataContext = null)
         {
             this.dataContext = dataContext;
             authorRepository = new AuthorRepository(dataContext);

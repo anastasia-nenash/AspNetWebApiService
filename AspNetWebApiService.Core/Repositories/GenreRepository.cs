@@ -1,17 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using AspNetWebApiService.Data.Interfaces;
-using AspNetWebApiService.Data.Models;
+using AspNetWebApiService.Core.Interfaces;
 using System;
+using AspNetWebApiService.Data.Interfaces;
+using AspNetWebApiService.Data.Entities;
 
-namespace AspNetWebApiService.Data.Repositories
+namespace AspNetWebApiService.Core.Repositories
 {
     public class GenreRepository : IGenreRepository
     {
-        private DataContext dataContext;
+        private IDataContext dataContext;
 
-        public GenreRepository(DataContext dataContext = null)
+        public GenreRepository(IDataContext dataContext)
         {
             this.dataContext = dataContext;
         }

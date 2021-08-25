@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using AspNetWebApiService.Data.Models;
+﻿using AspNetWebApiService.Data.Entities;
+using System.Collections.Generic;
 
-namespace AspNetWebApiService.Data.Interfaces
+namespace AspNetWebApiService.Core.Interfaces
 {
     /// <summary>
     /// Интерфейс жанра книги
