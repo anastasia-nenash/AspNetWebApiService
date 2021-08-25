@@ -1,17 +1,17 @@
-﻿using AspNetWebApiService.Data.Interfaces;
-using AspNetWebApiService.Data.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using AspNetWebApiService.Core.Interfaces;
+using AspNetWebApiService.Data.Entities;
+using AspNetWebApiService.Data.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AspNetWebApiService.Data.Repositories
+namespace AspNetWebApiService.Core.Repositories
 {
     public class LibraryCardRepository : ILibraryCardRepository
     {
-        private DataContext dataContext;
+        private IDataContext dataContext;
 
-        public LibraryCardRepository(DataContext dataContext = null)
+        public LibraryCardRepository(IDataContext dataContext)
         {
             this.dataContext = dataContext;
         }
@@ -72,7 +72,7 @@ namespace AspNetWebApiService.Data.Repositories
             if (libraryCard != null)
             {
                 libraryCard.DateOfReturnBook = libraryCard.DateOfReturnBook.AddDays(days);
-                dataContext.Update(libraryCard);
+                dataContext.LibraryCards.Update(libraryCard);
                 dataContext.SaveChanges();
             }
         }

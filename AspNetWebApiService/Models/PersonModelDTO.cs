@@ -1,4 +1,4 @@
-﻿using AspNetWebApiService.Data.Models;
+﻿using AspNetWebApiService.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

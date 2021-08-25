@@ -3,11 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AspNetWebApiService.Models;
-using AspNetWebApiService.Data;
 using AspNetWebApiService.Data.Interfaces;
-using AspNetWebApiService.Data.Repositories;
-using Microsoft.EntityFrameworkCore;
-using AspNetWebApiService.Data.Models;
+using AspNetWebApiService.Core.Interfaces;
+using AspNetWebApiService.Core.Repositories;
+using AspNetWebApiService.Data.Entities;
 
 namespace AspNetWebApiService.Controllers
 {
@@ -15,9 +14,9 @@ namespace AspNetWebApiService.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        private DataContext dataContext;
-        public IBookRepository bookRepository;
-        public BookController(DataContext dataContext = null)
+        private readonly IDataContext dataContext;
+        private readonly IBookRepository bookRepository;
+        public BookController(IDataContext dataContext)
         {
             this.dataContext = dataContext;
             bookRepository = new BookRepository(dataContext);

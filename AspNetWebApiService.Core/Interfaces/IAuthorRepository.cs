@@ -1,8 +1,10 @@
-﻿using System;
+﻿using AspNetWebApiService.Data.Entities;
+using System;
 using System.Collections.Generic;
-using AspNetWebApiService.Data.Models;
 
-namespace AspNetWebApiService.Data.Interfaces
+
+
+namespace AspNetWebApiService.Core.Interfaces
 {
     /// <summary>
     /// Интерфейс автора

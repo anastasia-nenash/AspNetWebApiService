@@ -1,6 +1,6 @@
-﻿using AspNetWebApiService.Data;
+﻿using AspNetWebApiService.Core.Interfaces;
+using AspNetWebApiService.Core.Repositories;
 using AspNetWebApiService.Data.Interfaces;
-using AspNetWebApiService.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,9 +12,9 @@ namespace AspNetWebApiService.Controllers
     [ApiController]
     public class LibraryCardController : ControllerBase
     {
-        private DataContext dataContext;
-        public ILibraryCardRepository libraryCardRepository;
-        public LibraryCardController(DataContext dataContext = null)
+        private readonly IDataContext dataContext;
+        private readonly ILibraryCardRepository libraryCardRepository;
+        public LibraryCardController(IDataContext dataContext)
         {
             this.dataContext = dataContext;
             libraryCardRepository = new LibraryCardRepository(dataContext);

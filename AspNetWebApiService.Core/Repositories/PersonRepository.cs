@@ -3,15 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AspNetWebApiService.Data.Interfaces;
-using AspNetWebApiService.Data.Models;
+using AspNetWebApiService.Data.Entities;
+using AspNetWebApiService.Core.Interfaces;
 
-namespace AspNetWebApiService.Data.Repositories
+namespace AspNetWebApiService.Core.Repositories
 {
     public class PersonRepository : IPersonRepository
     {
-        private DataContext dataContext;
+        private IDataContext dataContext;
 
-        public PersonRepository(DataContext dataContext = null)
+        public PersonRepository(IDataContext dataContext)
         {
             this.dataContext = dataContext;
         }
@@ -28,7 +29,7 @@ namespace AspNetWebApiService.Data.Repositories
                 personForUpdate.LastName = lastName;
                 personForUpdate.MiddleName = middleName;
                 personForUpdate.DateOfBirth = dateOfBirth;
-                dataContext.Update(personForUpdate);
+                dataContext.People.Update(personForUpdate);
                 dataContext.SaveChanges();
                 return personForUpdate;
             }
@@ -42,7 +43,7 @@ namespace AspNetWebApiService.Data.Repositories
                     LastName = lastName,
                     DateOfBirth = dateOfBirth
                 };
-                dataContext.Add(person);
+                dataContext.People.Add(person);
                 dataContext.SaveChanges();
                 return person;
             }
@@ -50,13 +51,13 @@ namespace AspNetWebApiService.Data.Repositories
 
         public void DeletePersonById(Guid personId)
         {
-            dataContext.Remove(dataContext.People.Find(personId));
+            dataContext.People.Remove(dataContext.People.Find(personId));
             dataContext.SaveChanges();
         }
 
         public void DeletePersonByName(string lastName, string firstName, string middleName)
         {
-            dataContext.Remove(dataContext.People.Where(x => x.LastName == lastName
+            dataContext.People.Remove(dataContext.People.Where(x => x.LastName == lastName
                                                         && x.FirstName == firstName
                                                         && x.MiddleName == middleName)
                                                   .FirstOrDefault());

@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using AspNetWebApiService.Data.Models;
+using AspNetWebApiService.Data.Interfaces;
+using AspNetWebApiService.Data.Entities;
 
 namespace AspNetWebApiService.Data
 {
-    public class DataContext: DbContext
+    public class DataContext: DbContext, IDataContext
     {
         public DbSet<Book> Books { get; set; }
         public DbSet<Person> People { get; set; }
@@ -18,6 +19,11 @@ namespace AspNetWebApiService.Data
         {
             //Database.EnsureDeleted();
             //Database.EnsureCreated();
+        }
+
+        public override int SaveChanges()
+        {
+            return base.SaveChanges();
         }
 
         /// <summary>

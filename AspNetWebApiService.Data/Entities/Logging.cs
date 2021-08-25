@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AspNetWebApiService.Data.Models
+namespace AspNetWebApiService.Data.Entities
 {
     /// <summary>
     /// Журналирование записей

@@ -1,8 +1,7 @@
-﻿using AspNetWebApiService.Data.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace AspNetWebApiService.Data.Interfaces
+namespace AspNetWebApiService.Core.Interfaces
 {
     /// <summary>
     /// Интерфейс библиотеки
