@@ -63,5 +63,13 @@ namespace AspNetWebApiService.Tests.RepositoryTests
             bookRepository.AddOrDeleteGenre(testData.Books[0].Name, testData.Genres[0].GenreName);
             Assert.AreEqual(testData.Books[0].Genres.Count, 1);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(NullReferenceException))]
+        public void AddOrDeleteGenreException()
+        {
+            var bookRepository = new BookRepository(dataContext);
+            bookRepository.AddOrDeleteGenre("Война и мир", "Роман");
+        }
     }
 }
