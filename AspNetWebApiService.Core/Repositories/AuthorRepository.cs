@@ -4,7 +4,7 @@ using System.Linq;
 using AspNetWebApiService.Core.Interfaces;
 using AspNetWebApiService.Data.Entities;
 using AspNetWebApiService.Data.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using AspNetWebApiService.Core.QueryableExtensions;
 
 namespace AspNetWebApiService.Core.Repositories
 {
@@ -12,9 +12,14 @@ namespace AspNetWebApiService.Core.Repositories
     {
         private IDataContext dataContext;
 
+        static AuthorRepository()
+        {
+            QueryableExtensions.QueryableExtensions.Includer
+                = QueryableExtensions.QueryableExtensions.Includer ?? new DbIncluder();
+        }
+
         public AuthorRepository(IDataContext dataContext)
         {
-           
             this.dataContext = dataContext;
         }
 
