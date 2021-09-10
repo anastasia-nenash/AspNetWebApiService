@@ -2,15 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using AspNetWebApiService.Core.Interfaces;
+using AspNetWebApiService.Core.QueryableExtensions;
 using AspNetWebApiService.Data.Entities;
 using AspNetWebApiService.Data.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace AspNetWebApiService.Core.Repositories
 {
     public class BookRepository : IBookRepository
     {
         private IDataContext dataContext;
+
+        static BookRepository()
+        {
+            QueryableExtensions.QueryableExtensions.Includer
+                = QueryableExtensions.QueryableExtensions.Includer ?? new DbIncluder();
+        }
 
         public BookRepository(IDataContext dataContext)
         {
@@ -24,7 +30,8 @@ namespace AspNetWebApiService.Core.Repositories
                               .Include(x => x.Author)
                               .Where(x => x.Author.LastName == lastName
                               && x.Author.FirstName == firstName
-                              && x.Author.MiddleName == middleName);
+                              && x.Author.MiddleName == middleName)
+                              .ToList();
         }
 
         public IEnumerable<Book> GetBooksByGenre(string genreName)
@@ -32,7 +39,8 @@ namespace AspNetWebApiService.Core.Repositories
             return dataContext.Books
                               .Include(x => x.Genres)
                               .Include(x => x.Author)
-                              .Where(x => x.Genres.Any(x => x.GenreName == genreName));
+                              .Where(x => x.Genres.Any(x => x.GenreName == genreName))
+                              .ToList();
         }
 
         public void AddBook(string bookName, string genreName, string authorName, string authorMidName, string authorLastName)
@@ -74,7 +82,7 @@ namespace AspNetWebApiService.Core.Repositories
 
         public void DeleteBook(Guid bookId)
         {
-            dataContext.Books.Remove(dataContext.Books.Find(bookId));
+            dataContext.Books.Remove(dataContext.Books.FirstOrDefault(x => x.Id == bookId));
             dataContext.SaveChanges();
         }
 

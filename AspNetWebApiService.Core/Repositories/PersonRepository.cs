@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using AspNetWebApiService.Data.Interfaces;
 using AspNetWebApiService.Data.Entities;
 using AspNetWebApiService.Core.Interfaces;
+using AspNetWebApiService.Core.QueryableExtensions;
 
 namespace AspNetWebApiService.Core.Repositories
 {
@@ -15,6 +15,11 @@ namespace AspNetWebApiService.Core.Repositories
         public PersonRepository(IDataContext dataContext)
         {
             this.dataContext = dataContext;
+        }
+        static PersonRepository()
+        {
+            QueryableExtensions.QueryableExtensions.Includer
+                = QueryableExtensions.QueryableExtensions.Includer ?? new DbIncluder();
         }
 
         public Person AddOrUpdatePerson(string firstName, string middleName, string lastName, DateTime dateOfBirth)
@@ -51,7 +56,7 @@ namespace AspNetWebApiService.Core.Repositories
 
         public void DeletePersonById(Guid personId)
         {
-            dataContext.People.Remove(dataContext.People.Find(personId));
+            dataContext.People.Remove(dataContext.People.FirstOrDefault(x => x.Id == personId));
             dataContext.SaveChanges();
         }
 

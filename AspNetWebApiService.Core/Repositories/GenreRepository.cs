@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using AspNetWebApiService.Core.Interfaces;
 using System;
 using AspNetWebApiService.Data.Interfaces;
 using AspNetWebApiService.Data.Entities;
+using AspNetWebApiService.Core.QueryableExtensions;
 
 namespace AspNetWebApiService.Core.Repositories
 {
@@ -15,6 +15,12 @@ namespace AspNetWebApiService.Core.Repositories
         public GenreRepository(IDataContext dataContext)
         {
             this.dataContext = dataContext;
+        }
+
+        static GenreRepository()
+        {
+            QueryableExtensions.QueryableExtensions.Includer
+                = QueryableExtensions.QueryableExtensions.Includer ?? new DbIncluder();
         }
 
         public ICollection<Genre> GetAllGenres()
